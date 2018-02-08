@@ -84,7 +84,7 @@ if($conn_id){
                     
                        // Continuar la carga...
                        $ret = ftp_nb_continue($conn_id);
-                       sleep(60);
+                       sleep(20);
                     }
                     if ($ret != FTP_FINISHED) {
                        error_log("Hubo un error al cargar el archivo...");
@@ -118,7 +118,7 @@ function check_transfering($filename){
           
             foreach($file as $line) {
                 error_log('FILE: ' . $filename . ' LINE: '.$line);
-                if(str_replace(' ','',$line) == str_replace(' ','',$filename)) {
+                if(rtrim(str_replace(' ','',$line)) == rtrim(str_replace(' ','',$filename))) {
                     error_log('SON IGUALES');
                     $is_transfering = true;
                     break;
