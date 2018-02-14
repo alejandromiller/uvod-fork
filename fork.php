@@ -1,10 +1,11 @@
 
 <?php
 
+//define('FILES_BASE_URL','/Users/ale_miller10/Documentos/UNIV/UVOD/NewVideos');
 define('FILES_BASE_URL','/Users/ale_miller10/Documentos/UNIV/UVOD/NewVideos');
 // define('FILES_BASE_URL','\\\\ENCODERGD\OTTHold');
-// define('ADMIN_API_URL', 'http://rjr-admin-api.univtec.com/index.php/');
-define('ADMIN_API_URL', 'http://localhost/uvod-admin-api/index.php/');
+define('ADMIN_API_URL', 'http://rjr-admin-api.univtec.com/index.php/');
+//define('ADMIN_API_URL', 'http://localhost/uvod-admin-api/index.php/');
 define('UVOD_ADMIN_API_USER', 'rjr_portal');
 define('UVOD_ADMIN_API_PASSWORD', 'Univtec1@');
 define('FTP_SERVER', 'filestrg10.streamgates.net');
@@ -49,47 +50,47 @@ if($conn_id){
 
                     error_log('size: ' . $filesize);
 
-                    // if (ftp_put($conn_id, $files[$i], $path, FTP_BINARY)) { 
+                    if (ftp_put($conn_id, $files[$i], $path, FTP_BINARY)) { 
 
-                    //     update_tranfering_list($files[$i]);
+                        update_tranfering_list($files[$i]);
 
-                    //     //Process the CSV File to get the metadata
-                    //     $info = process_csv_file($csv_file);
+                        //Process the CSV File to get the metadata
+                        $info = process_csv_file($csv_file);
                     
-                    //     //Ingest file into OTT system
-                    //     $ingest = ingest_file($files[$i], $info);
+                        //Ingest file into OTT system
+                        $ingest = ingest_file($files[$i], $info);
 
-                    //     //Delete file from local directory
-                    //     if (!isset($ingest->error) || $ingest->error != 1) {
-                    //         $text = date('Y/m/d H:i',time()) . ' - ' . $files[$i] . PHP_EOL;
-                    //         file_put_contents(FILES_BASE_URL.'/upload_log.txt', $text, FILE_APPEND);
-                    //         delete_files($files[$i]);
-                    //     }else{
-                    //         $text = date('Y/m/d H:i',time()) . ' - ' . $files[$i] . ' - There was a problem while ingesting'. PHP_EOL;
-                    //         file_put_contents(FILES_BASE_URL.'/upload_error_log.txt', $text, FILE_APPEND);  
-                    //     }   
+                        //Delete file from local directory
+                        if (!isset($ingest->error) || $ingest->error != 1) {
+                            $text = date('Y/m/d H:i',time()) . ' - ' . $files[$i] . PHP_EOL;
+                            file_put_contents(FILES_BASE_URL.'/upload_log.txt', $text, FILE_APPEND);
+                            delete_files($files[$i]);
+                        }else{
+                            $text = date('Y/m/d H:i',time()) . ' - ' . $files[$i] . ' - There was a problem while ingesting'. PHP_EOL;
+                            file_put_contents(FILES_BASE_URL.'/upload_error_log.txt', $text, FILE_APPEND);  
+                        }   
 
-                    // } else { 
-                    //     update_tranfering_list($files[$i]);
-                    //     $text = date('Y/m/d H:i',time()) . ' - ' . $files[$i] . ' - There was a problem while uploading'. PHP_EOL;
-                    //     file_put_contents(FILES_BASE_URL.'/upload_error_log.txt', $text, FILE_APPEND);
+                    } else { 
+                        update_tranfering_list($files[$i]);
+                        $text = date('Y/m/d H:i',time()) . ' - ' . $files[$i] . ' - There was a problem while uploading'. PHP_EOL;
+                        file_put_contents(FILES_BASE_URL.'/upload_error_log.txt', $text, FILE_APPEND);
 
-                    // } 
+                    } 
 
-                    $ret = ftp_nb_put($conn_id, $files[$i], $path, FTP_BINARY);
-                    while ($ret == FTP_MOREDATA) {
+                    // $ret = ftp_nb_put($conn_id, $files[$i], $path, FTP_BINARY);
+                    // while ($ret == FTP_MOREDATA) {
                     
-                       // Haga lo que quiera
-                      error_log('El ret: '. $ret . ' El size: '.ftp_size($conn_id, $path));
+                    //    // Haga lo que quiera
+                    //   error_log('El ret: '. $ret . ' El size: '.ftp_size($conn_id, $path));
                     
-                       // Continuar la carga...
-                       $ret = ftp_nb_continue($conn_id);
-                       sleep(20);
-                    }
-                    if ($ret != FTP_FINISHED) {
-                       error_log("Hubo un error al cargar el archivo...");
-                       exit(1);
-                    }
+                    //    // Continuar la carga...
+                    //    $ret = ftp_nb_continue($conn_id);
+                    //    sleep(20);
+                    // }
+                    // if ($ret != FTP_FINISHED) {
+                    //    error_log("Hubo un error al cargar el archivo...");
+                    //    exit(1);
+                    // }
 
                 }
             }else{
