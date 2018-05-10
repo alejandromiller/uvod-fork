@@ -30,17 +30,18 @@ if($conn_id){
 
         for ($i=0; $i < sizeof($files); $i++) { 
 
-            $file_name = pathinfo($files[$i], PATHINFO_FILENAME);
-            $file_extension = pathinfo($files[$i], PATHINFO_EXTENSION);
+            $filename = fix_filename($files[$i]);
+            $file_name = pathinfo($filename, PATHINFO_FILENAME);
+            $file_extension = pathinfo($filename, PATHINFO_EXTENSION);
             $csv_file = FILES_BASE_URL . '/' . $file_name . '.csv';
 
             if(in_array($file_extension, $allowed_files) && file_exists($csv_file)){
 
-                $is_transfering = check_transfering($files[$i]);
+                $is_transfering = check_transfering($filename);
                 
                 if(!$is_transfering){
 
-                    $transfering_text = $files[$i] . PHP_EOL;
+                    $transfering_text = $filename . PHP_EOL;
                     file_put_contents(FILES_BASE_URL.'/transfering.txt', $transfering_text, FILE_APPEND);
                     
                     // upload a file 
@@ -50,34 +51,34 @@ if($conn_id){
 
                     error_log('size: ' . $filesize);
 
-                    if (ftp_put($conn_id, $files[$i], $path, FTP_BINARY)) { 
+                    if (ftp_put($conn_id, $filename, $path, FTP_BINARY)) { 
 
-                        update_tranfering_list($files[$i]);
+                        update_tranfering_list($filename);
 
                         //Process the CSV File to get the metadata
                         $info = process_csv_file($csv_file);
                     
                         //Ingest file into OTT system
-                        $ingest = ingest_file($files[$i], $info);
+                        $ingest = ingest_file($filename, $info);
 
                         //Delete file from local directory
                         if (!isset($ingest->error) || $ingest->error != 1) {
-                            $text = date('Y/m/d H:i',time()) . ' - ' . $files[$i] . PHP_EOL;
+                            $text = date('Y/m/d H:i',time()) . ' - ' . $filename . PHP_EOL;
                             file_put_contents(FILES_BASE_URL.'/upload_log.txt', $text, FILE_APPEND);
                             delete_files($files[$i]);
                         }else{
-                            $text = date('Y/m/d H:i',time()) . ' - ' . $files[$i] . ' - There was a problem while ingesting'. PHP_EOL;
+                            $text = date('Y/m/d H:i',time()) . ' - ' . $filename . ' - There was a problem while ingesting'. PHP_EOL;
                             file_put_contents(FILES_BASE_URL.'/upload_error_log.txt', $text, FILE_APPEND);  
                         }   
 
                     } else { 
-                        update_tranfering_list($files[$i]);
-                        $text = date('Y/m/d H:i',time()) . ' - ' . $files[$i] . ' - There was a problem while uploading'. PHP_EOL;
+                        update_tranfering_list($filename);
+                        $text = date('Y/m/d H:i',time()) . ' - ' . $filename . ' - There was a problem while uploading'. PHP_EOL;
                         file_put_contents(FILES_BASE_URL.'/upload_error_log.txt', $text, FILE_APPEND);
 
                     } 
 
-                    // $ret = ftp_nb_put($conn_id, $files[$i], $path, FTP_BINARY);
+                    // $ret = ftp_nb_put($conn_id, $filename, $path, FTP_BINARY);
                     // while ($ret == FTP_MOREDATA) {
                     
                     //    // Haga lo que quiera
@@ -95,7 +96,7 @@ if($conn_id){
                 }
             }else{
                 if(in_array($file_extension, $allowed_files) && !file_exists($csv_file)){ 
-                    $text = date('Y/m/d H:i',time()) . ' - ' . $files[$i] . ' - The CSV file doesnt exist'. PHP_EOL;
+                    $text = date('Y/m/d H:i',time()) . ' - ' . $filename . ' - The CSV file doesnt exist'. PHP_EOL;
                     file_put_contents(FILES_BASE_URL.'/upload_error_log.txt', $text, FILE_APPEND);
                 }
             }
@@ -106,6 +107,12 @@ if($conn_id){
     ftp_close($conn_id);
     }
 
+}
+
+//Fix the file name
+function fix_filename($filename){
+    $new_name = str_replace(' ','_',$filename);
+    return $new_name;
 }
 
 //Check if the file is tranfering
