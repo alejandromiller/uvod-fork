@@ -62,17 +62,17 @@ if($conn_id){
 
                         //Delete file from local directory
                         if (!isset($ingest->error) || $ingest->error != 1) {
-                            $text = date('Y/m/d H:i',time()) . ' - ' . $filename . PHP_EOL;
+                            $text = date('Y/m/d H:i',time()) . ' - ' . $files[$i] . PHP_EOL;
                             file_put_contents(FILES_BASE_URL.'/upload_log.txt', $text, FILE_APPEND);
                             delete_files($files[$i]);
                         }else{
-                            $text = date('Y/m/d H:i',time()) . ' - ' . $filename . ' - There was a problem while ingesting'. PHP_EOL;
+                            $text = date('Y/m/d H:i',time()) . ' - ' . $files[$i] . ' - There was a problem while ingesting'. PHP_EOL;
                             file_put_contents(FILES_BASE_URL.'/upload_error_log.txt', $text, FILE_APPEND);  
                         }   
 
                     } else { 
                         update_tranfering_list($filename);
-                        $text = date('Y/m/d H:i',time()) . ' - ' . $filename . ' - There was a problem while uploading'. PHP_EOL;
+                        $text = date('Y/m/d H:i',time()) . ' - ' . $files[$i] . ' - There was a problem while uploading'. PHP_EOL;
                         file_put_contents(FILES_BASE_URL.'/upload_error_log.txt', $text, FILE_APPEND);
 
                     } 
