@@ -32,7 +32,7 @@ if($conn_id){
             $filename = fix_filename($files[$i]);
             $file_name = pathinfo($files[$i], PATHINFO_FILENAME);
             $file_extension = pathinfo($files[$i], PATHINFO_EXTENSION);
-            $csv_file = FILES_BASE_URL . '/' . $filename . '.csv';
+            $csv_file = FILES_BASE_URL . '/' . $files[$i] . '.csv';
 
             if(in_array($file_extension, $allowed_files) && file_exists($csv_file)){
 
