@@ -95,7 +95,7 @@ if($conn_id){
                 }
             }else{
                 if(in_array($file_extension, $allowed_files) && !file_exists($csv_file)){ 
-                    $text = date('Y/m/d H:i',time()) . ' - ' . $files[$i] . ' - The CSV file doesnt exist'. PHP_EOL;
+                    $text = date('Y/m/d H:i',time()) . ' - ' . $csv_file . ' - The CSV file doesnt exist'. PHP_EOL;
                     file_put_contents(FILES_BASE_URL.'/upload_error_log.txt', $text, FILE_APPEND);
                 }
             }
