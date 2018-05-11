@@ -2,8 +2,8 @@
 <?php
 
 //define('FILES_BASE_URL','/Users/ale_miller10/Documentos/UNIV/UVOD/NewVideos');
-define('FILES_BASE_URL','/Users/ale_miller10/Documentos/UNIV/UVOD/NewVideos');
-// define('FILES_BASE_URL','\\\\ENCODERGD\OTTHold');
+// define('FILES_BASE_URL','/Users/ale_miller10/Documentos/UNIV/UVOD/NewVideos');
+define('FILES_BASE_URL','\\\\ENCODERGD\OTTHold');
 define('ADMIN_API_URL', 'http://rjr-admin-api.univtec.com/index.php/');
 //define('ADMIN_API_URL', 'http://localhost/uvod-admin-api/index.php/');
 define('UVOD_ADMIN_API_USER', 'rjr_portal');
@@ -31,9 +31,9 @@ if($conn_id){
         for ($i=0; $i < sizeof($files); $i++) { 
 
             $filename = fix_filename($files[$i]);
-            $file_name = pathinfo($filename, PATHINFO_FILENAME);
-            $file_extension = pathinfo($filename, PATHINFO_EXTENSION);
-            $csv_file = FILES_BASE_URL . '/' . $file_name . '.csv';
+            $file_name = pathinfo($files[$i], PATHINFO_FILENAME);
+            $file_extension = pathinfo($files[$i], PATHINFO_EXTENSION);
+            $csv_file = FILES_BASE_URL . '/' . $filename . '.csv';
 
             if(in_array($file_extension, $allowed_files) && file_exists($csv_file)){
 
