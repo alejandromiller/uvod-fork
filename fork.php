@@ -1,7 +1,6 @@
 
 <?php
 
-//define('FILES_BASE_URL','/Users/ale_miller10/Documentos/UNIV/UVOD/NewVideos');
 // define('FILES_BASE_URL','/Users/ale_miller10/Documentos/UNIV/UVOD/NewVideos');
 define('FILES_BASE_URL','\\\\ENCODERGD\OTTHold');
 define('ADMIN_API_URL', 'http://rjr-admin-api.univtec.com/index.php/');
@@ -198,9 +197,10 @@ function process_csv_file($url){
 
         $title = htmlentities("<title>".$result[0]."</title>\n");
         $aired_date = strtotime($result[3]) . '000';
+        $description = htmlentities("<description>".$result[2]."</description>\n");
         $aired_date_str = htmlentities("<pl1:aired_date>$aired_date</pl1:aired_date>\n");
         $duration = htmlentities("<pl1:runtime>" . $result[1]. "</pl1:runtime>\n");
-        $custom = $title . $aired_date_str . $duration;
+        $custom = $title . $description . $aired_date_str . $duration;
 
         return $custom;
 }
